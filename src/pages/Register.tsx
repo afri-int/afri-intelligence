@@ -25,85 +25,41 @@ const Register: React.FC = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-// ...existing code...
-const registerUser = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+  const registerUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  if (!selectedRole) {
-    toast.error("Please select a role first on the Home page.");
-    return;
-  }
-
-  const { name, email, password } = data;
-
-  if (!name || !email || !password) {
-    toast.error("Please fill all fields.");
-    return;
-  }
-
-  // 1. Check if email exists
-  try {
-    const checkResponse = await axios.post("/auth/check-email", {
-      email,
-      role: selectedRole,
-    });
-    if (checkResponse.data.exists) {
-      toast.error("Email already exists. Please use a different email.");
+    if (!selectedRole) {
+      toast.error("Please select a role first on the Home page.");
       return;
     }
-  } catch (err: any) {
-    toast.error("Could not verify email. Please try again.");
-    return;
-  }
 
-  // 2. Password validation
-  const passwordErrors: string[] = [];
-  if (password.length < 8) {
-    passwordErrors.push("at least 8 characters");
-  }
-  if (!/[A-Z]/.test(password)) {
-    passwordErrors.push("one uppercase letter");
-  }
-  if (!/\d/.test(password)) {
-    passwordErrors.push("one number");
-  }
-  if (!/[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]/.test(password)) {
-    passwordErrors.push("one special character");
-  }
+    const { name, email, password } = data;
 
-  if (passwordErrors.length > 0) {
-    toast.error(
-      `Password must include: ${passwordErrors.join(", ")}.`
-    );
-    return;
-  }
-
-  // 3. Register user
-  try {
-    const response = await axios.post("/auth/register", {
-      name,
-      email,
-      password,
-      role: selectedRole,
-    });
-
-    if (response.data.error) {
-      toast.error(response.data.error);
-    } else {
-      toast.success("Registered successfully!");
-      setData({ name: "", email: "", password: "" });
-      navigate("/login");
+    if (!name || !email || !password) {
+      toast.error("Please fill all fields.");
+      return;
     }
-  } catch (err: any) {
-    if (err.response && err.response.data && err.response.data.error) {
-      toast.error(err.response.data.error);
-    } else {
-      toast.error("Registration failed! Please try again.");
+
+    try {
+      const response = await axios.post("/auth/register", {
+        name,
+        email,
+        password,
+        role: selectedRole,
+      });
+
+      if (response.data.error) {
+        toast.error(response.data.error);
+      } else {
+        toast.success("Registered successfully!");
+        setData({ name: "", email: "", password: "" });
+        navigate("/login");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Registration failed. Please try again.");
     }
-    console.error(err);
-  }
-};
-// ...existing code...
+  };
 
   return (
     <div className={styles.login_box}>
