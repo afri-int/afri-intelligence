@@ -5,6 +5,22 @@ import User from "../models/user.js";
 import { hashPassword, comparePassword } from "../helpers/auth.js";
 import jwt from "jsonwebtoken";
 
+export const checkEmail = async (req, res) => {
+  try {
+    const { email, role } = req.body;
+    let userExists;
+    if (role === "teacher") {
+      userExists = await Teacher.findOne({ email });
+    } else {
+      userExists = await Student.findOne({ email });
+    }
+    res.json({ exists: !!userExists });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// ...existing code...
 export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -13,6 +29,7 @@ export const register = async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
+    // Check if user/email exists first
     let userExists;
     if (role === "teacher") {
       userExists = await Teacher.findOne({ email });
@@ -20,7 +37,15 @@ export const register = async (req, res) => {
       userExists = await Student.findOne({ email });
     }
 
-    if (userExists) return res.status(400).json({ error: "Email already in use" });
+    if (userExists) {
+      return res.status(400).json({ error: "Email already exists. Please use a different email." });
+    }
+
+    // Password strength check
+    if (password.length < 8) {
+      return res.status(400).json({ error: "Password must be at least 8 characters long" });
+    }
+    // Add more checks if needed (e.g., regex for complexity)
 
     const hashedPassword = await hashPassword(password);
 
@@ -36,12 +61,15 @@ export const register = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+// ...existing code...
 
 export const login = async (req, res) => {
   try {
     const { email, password, role } = req.body;
 
-    if (!email || !password || !role) return res.status(400).json({ error: "All fields are required" });
+    if (!email || !password || !role) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
 
     let user;
     if (role === "teacher") {
@@ -50,10 +78,14 @@ export const login = async (req, res) => {
       user = await Student.findOne({ email });
     }
 
-    if (!user) return res.status(400).json({ error: "Invalid email or password" });
+    if (!user) {
+      return res.status(400).json({ error: "No account found with this email." });
+    }
 
     const isMatch = await comparePassword(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Invalid email or password" });
+    if (!isMatch) {
+      return res.status(400).json({ error: "Incorrect password." });
+    }
 
     // Generate token
     const token = jwt.sign({ id: user._id, role }, process.env.JWT_SECRET, { expiresIn: "7d" });
