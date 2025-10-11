@@ -1,6 +1,24 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import logo from "../assets/images/afri-ai.png";
 
+// Simple responsive hook
+const useMediaQuery = (query: string) => {
+const [matches, setMatches] = useState<boolean>(false);
+
+
+useEffect(() => {
+const media = window.matchMedia(query);
+if (media.matches !== matches) setMatches(media.matches);
+const listener = () => setMatches(media.matches);
+media.addEventListener("change", listener);
+return () => media.removeEventListener("change", listener);
+}, [matches, query]);
+
+
+return matches;
+};
+
+
 type MLCEngineInterface = any; // fallback type
 type InitProgressReport = any; // fallback type
 
@@ -24,6 +42,8 @@ const StudentAI: React.FC = () => {
   const [autoScroll] = useState<boolean>(true);
   const [showPromptSuggestions, setShowPromptSuggestions] =
     useState<boolean>(true);
+
+const isMobile = useMediaQuery("(max-width: 768px)");
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -68,6 +88,8 @@ const StudentAI: React.FC = () => {
     subject: StudyMode;
   }
 
+  
+
   const promptSuggestions: { general: string[] } & Partial<
     Record<StudyMode, string[]>
   > = {
@@ -103,24 +125,26 @@ const StudentAI: React.FC = () => {
     ],
   };
 
-  const scrollToBottom = useCallback(() => {
-    if (autoScroll) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [autoScroll]);
+ const scrollToBottom = useCallback(() => {
+if (autoScroll) {
+messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+}
+}, [autoScroll]);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, scrollToBottom]);
 
-  // Auto-resize textarea
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height =
-        Math.min(textareaRef.current.scrollHeight, 120) + "px";
-    }
-  }, [inputMessage]);
+useEffect(() => {
+scrollToBottom();
+}, [messages, scrollToBottom]);
+
+
+// Auto-resize textarea
+useEffect(() => {
+if (textareaRef.current) {
+textareaRef.current.style.height = "auto";
+textareaRef.current.style.height =
+Math.min(textareaRef.current.scrollHeight, 120) + "px";
+}
+}, [inputMessage]);
 
   const getSystemPrompt = (mode: string) => {
     const prompts: Record<string, string> = {
