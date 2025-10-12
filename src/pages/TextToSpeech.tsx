@@ -186,14 +186,17 @@ const TextToSpeech: React.FC = () => {
             <option value="zu">Zulu</option>
             <option value="xh">Xhosa</option>
             <option value="st">Sesotho</option>
+                      <option value="af">Afrikaans</option>
+
           </select>
         </div>
 
         <div className="label-type">
           <textarea
+           data-i18n
             id="inputText"
             placeholder="Enter text to translate..."
-            data-i18n
+           
             ref={inputRef}
           ></textarea>
         </div>

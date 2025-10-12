@@ -1,10 +1,326 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import logo from "../assets/images/afri-ai.png";
 
+
+const LoadingScreen: React.FC = () => {
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  useEffect(() => {
+  // Show welcome for 8 seconds, then start fade out
+  const welcomeTimer = setTimeout(() => {
+    setFadeOut(true);
+  }, 8000); // Increased from 3000ms to 8000ms
+
+  // Completely hide after fade out completes
+  const hideTimer = setTimeout(() => {
+    setShowWelcome(false);
+  }, 5000); 
+
+  return () => {
+    clearTimeout(welcomeTimer);
+    clearTimeout(hideTimer);
+  };
+}, []);
+
+  if (!showWelcome) {
+    return null;
+  }
+
+return (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "#0a2613",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999,
+      fontFamily: "system-ui, -apple-system, sans-serif",
+      overflow: "hidden",
+    }}
+  >
+    {/* Subtle background gradient */}
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        background: `radial-gradient(circle at 30% 70%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 30%, rgba(16, 185, 129, 0.05) 0%, transparent 50%)`,
+      }}
+    />
+    
+    {/* Minimal floating particles */}
+    {[...Array(8)].map((_, i) => (
+      <div
+        key={i}
+        style={{
+          position: "absolute",
+          width: `${Math.random() * 3 + 2}px`,
+          height: `${Math.random() * 3 + 2}px`,
+          backgroundColor: `rgba(16, 185, 129, ${Math.random() * 0.15 + 0.1})`,
+          borderRadius: "50%",
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+          animation: `floatParticle ${Math.random() * 20 + 20}s linear infinite`,
+          animationDelay: `${Math.random() * 10}s`,
+        }}
+      />
+    ))}
+
+    {/* Main content container */}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        transform: fadeOut ? "translateY(-8px)" : "translateY(0)",
+        opacity: fadeOut ? 0 : 1,
+        transition: "all 1.2s ease-out",
+      }}
+    >
+      {/* Logo with smooth, professional animation */}
+      <div
+        style={{
+          position: "relative",
+          marginBottom: "3rem",
+        }}
+      >
+        <img 
+          src={logo} 
+          alt="Afri AI Logo" 
+          style={{
+            width: "200px",
+            height: "200px",
+            transform: fadeOut ? "scale(0.95)" : "scale(1)",
+            opacity: fadeOut ? 0 : 1,
+            transition: "all 1.2s ease-out",
+            filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.4))",
+            animation: "logoEntrance 1.8s ease-out, logoFloat 8s ease-in-out infinite 1.8s",
+          }}
+        />
+        
+        {/* Subtle glow effect */}
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "240px",
+            height: "240px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)",
+            animation: "pulseGlow 6s ease-in-out infinite",
+            zIndex: -1,
+          }}
+        />
+      </div>
+
+      {/* Main title with clean reveal */}
+      <h1
+        style={{
+          color: "white",
+          fontSize: "4.5rem",
+          fontWeight: "700",
+          marginBottom: "1.5rem",
+          marginTop: 0,
+          textAlign: "center",
+          background: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          transform: fadeOut ? "translateY(-6px)" : "translateY(0)",
+          opacity: fadeOut ? 0 : 1,
+          transition: "all 1.2s ease-out 0.1s",
+          textShadow: "0 8px 32px rgba(16, 185, 129, 0.3)",
+          letterSpacing: "2px",
+          animation: "titleReveal 1.5s ease-out 0.8s both",
+          lineHeight: "1.1",
+        }}
+      >
+        Afri AI
+      </h1>
+      
+      {/* Subtitle with elegant fade-in */}
+      <p
+        style={{
+          color: "rgba(255,255,255,0.85)",
+          fontSize: "1.5rem",
+          marginBottom: "0",
+          marginTop: 0,
+          textAlign: "center",
+          transform: fadeOut ? "translateY(-4px)" : "translateY(0)",
+          opacity: fadeOut ? 0 : 1,
+          transition: "all 1.2s ease-out 0.2s",
+          textShadow: "0 2px 8px rgba(0,0,0,0.3)",
+          fontWeight: "300",
+          letterSpacing: "1px",
+          animation: "subtitleReveal 1.8s ease-out 1.5s both",
+          maxWidth: "400px",
+          lineHeight: "1.4",
+        }}
+      >
+        Your Intelligent Study Companion
+      </p>
+
+      {/* Minimal decorative line */}
+      <div
+        style={{
+          width: "80px",
+          height: "1px",
+          background: "linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent)",
+          marginTop: "2.5rem",
+          opacity: fadeOut ? 0 : 0.5,
+          transition: "opacity 0.8s ease-out 0.4s",
+          animation: "lineReveal 1.2s ease-out 2.2s both",
+        }}
+      />
+    </div>
+
+    <style>
+      {`
+        @keyframes logoEntrance {
+          0% {
+            transform: scale(0.9);
+            opacity: 0;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+        
+        @keyframes logoFloat {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
+        }
+        
+        @keyframes pulseGlow {
+          0%, 100% {
+            opacity: 0.1;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          50% {
+            opacity: 0.2;
+            transform: translate(-50%, -50%) scale(1.05);
+          }
+        }
+        
+        @keyframes titleReveal {
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes subtitleReveal {
+          0% {
+            opacity: 0;
+            transform: translateY(15px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes floatParticle {
+          0% {
+            transform: translateY(100vh);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.3;
+          }
+          90% {
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateY(-100px);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes lineReveal {
+          0% {
+            width: 0px;
+            opacity: 0;
+          }
+          100% {
+            width: 80px;
+            opacity: 0.5;
+          }
+        }
+      `}
+    </style>
+  </div>
+);
+
+};
+
+// Simple responsive hook
+const useMediaQuery = (query: string) => {
+  const [matches, setMatches] = useState<boolean>(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) setMatches(media.matches);
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [matches, query]);
+
+  return matches;
+};
+
+// Custom hook for dynamic height
+const useDynamicHeight = () => {
+  const [height, setHeight] = useState<string>('100vh');
+
+  useEffect(() => {
+    const updateHeight = () => {
+      setHeight(`${window.innerHeight}px`);
+    };
+
+    // Set initial height
+    updateHeight();
+
+    // Update on resize
+    window.addEventListener('resize', updateHeight);
+    window.addEventListener('orientationchange', updateHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+      window.removeEventListener('orientationchange', updateHeight);
+    };
+  }, []);
+
+  return height;
+};
+
 type MLCEngineInterface = any; // fallback type
 type InitProgressReport = any; // fallback type
 
 const StudentAI: React.FC = () => {
+   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [status, setStatus] = useState<string>("Loading available models...");
   const [progressPercent, setProgressPercent] = useState<number>(0);
   const [engine, setEngine] = useState<MLCEngineInterface | null>(null);
@@ -25,9 +341,14 @@ const StudentAI: React.FC = () => {
   const [showPromptSuggestions, setShowPromptSuggestions] =
     useState<boolean>(true);
 
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isTablet = useMediaQuery("(max-width: 1024px)");
+  const dynamicHeight = useDynamicHeight();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   type StudyMode =
     | "general"
@@ -72,34 +393,34 @@ const StudentAI: React.FC = () => {
     Record<StudyMode, string[]>
   > = {
     general: [
-      "Explain this concept in simple terms",
-      "Help me understand this homework problem",
-      "What's the main idea here?",
-      "Can you break this down step by step?",
+      "Explain this concept",
+      "Help with homework",
+      "Break down step by step",
+      "Simple explanation",
     ],
     math: [
-      "Solve this equation step by step",
-      "Explain this math concept with examples",
-      "Help me with word problems",
-      "Show me different ways to approach this",
+      "Solve equation",
+      "Math concept examples",
+      "Help with word problems",
+      "Different approaches",
     ],
     science: [
-      "Explain this scientific process",
-      "Help me understand this experiment",
-      "What's the relationship between these concepts?",
-      "Give me real-world examples",
+      "Explain scientific process",
+      "Experiment help",
+      "Real-world examples",
+      "Concept relationships",
     ],
     english: [
-      "Help me analyze this text",
-      "Improve my essay structure",
-      "Explain this literary device",
-      "Help with grammar and style",
+      "Analyze text",
+      "Improve essay",
+      "Literary devices",
+      "Grammar help",
     ],
     essay: [
-      "Help me brainstorm ideas",
-      "Create an outline for my essay",
-      "Improve my thesis statement",
-      "Help with conclusion paragraph",
+      "Brainstorm ideas",
+      "Create outline",
+      "Thesis statement",
+      "Conclusion help",
     ],
   };
 
@@ -108,6 +429,14 @@ const StudentAI: React.FC = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [autoScroll]);
+
+ useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -121,6 +450,24 @@ const StudentAI: React.FC = () => {
         Math.min(textareaRef.current.scrollHeight, 120) + "px";
     }
   }, [inputMessage]);
+
+  // Handle window resize to ensure proper layout
+  useEffect(() => {
+    const handleResize = () => {
+      // Force re-render on resize to update dynamic height
+      if (containerRef.current) {
+        // This will trigger the dynamic height hook to update
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+    };
+  }, []);
 
   const getSystemPrompt = (mode: string) => {
     const prompts: Record<string, string> = {
@@ -157,12 +504,12 @@ const StudentAI: React.FC = () => {
 
         // Prioritize smaller, faster models for better student experience
         const preferredPatterns = [
-         
+                    /qwen.*0\.5b/i,
+
           /tiny.*llama.*1b/i,
-          /qwen.*0\.5b/i,
           /qwen.*1\.8b/i,
           /llama.*3\.2.*1b/i,
-           /phi.*3.*mini/i,
+          /phi.*3.*mini/i,
           /gemma.*2b/i,
         ];
 
@@ -483,21 +830,21 @@ What would you like to study today?`,
 
       setMessages((prev) => {
         const updated = [...prev];
-       const targetIndex = updated.findIndex((m) => m.id === messageId);
-if (targetIndex !== -1) {
-  const target = updated[targetIndex];
-  if (target) {
-    updated[targetIndex] = {
-      id: target.id,
-      role: target.role,
-      timestamp: target.timestamp,
-      content: target.content + "\n\n" + continuation,
-      isTruncated: stillTruncated,
-      finishReason,
-      ...(target.subject ? { subject: target.subject } : {}),
-    };
-  }
-}
+        const targetIndex = updated.findIndex((m) => m.id === messageId);
+        if (targetIndex !== -1) {
+          const target = updated[targetIndex];
+          if (target) {
+            updated[targetIndex] = {
+              id: target.id,
+              role: target.role,
+              timestamp: target.timestamp,
+              content: target.content + "\n\n" + continuation,
+              isTruncated: stillTruncated,
+              finishReason,
+              ...(target.subject ? { subject: target.subject } : {}),
+            };
+          }
+        }
 
         return updated;
       });
@@ -528,85 +875,145 @@ if (targetIndex !== -1) {
     assistantBg: darkMode ? "#374151" : "#f1f5f9",
     border: darkMode ? "#374151" : "#e2e8f0",
     inputBg: darkMode ? "#374151" : "#f9fafb",
-    
   };
 
-  return (
+  // Responsive spacing
+  const getSpacing = () => {
+    if (isMobile) return "0.2rem";
+    if (isTablet) return "0.5rem";
+    return "0.75rem";
+  };
+
+  const getChatMargins = () => {
+    if (isMobile) return "0.25rem";
+    if (isTablet) return "0.75rem";
+    return "1rem";
+  };
+
+  const getHeaderFontSize = () => {
+    if (isMobile) return "1.5em";
+    if (isTablet) return "2.5em";
+    return "3em";
+  };
+
+  const getLogoSize = () => {
+    if (isMobile) return "40px";
+    if (isTablet) return "60px";
+    return "80px";
+  };
+
+   if (isLoading) {
+    return <LoadingScreen />;
+  }
+     return (
     <div
+      ref={containerRef}
       style={{
         width: "100vw",
+        height: dynamicHeight,
+        maxHeight: "100vh",
         fontFamily: "system-ui, -apple-system, sans-serif",
-        height: "100vh",
         display: "flex",
-        justifyContent: "center",
         flexDirection: "column",
         backgroundColor: themeStyles.backgroundColor,
         color: themeStyles.color,
         fontSize: `${fontSize}px`,
         transition: "all 0.3s ease",
+        overflow: "hidden",
       }}
     >
-      {/* Enhanced Header */}
+      {/* Ultra Compact Header */}
       <div
         style={{
-          borderBottom: `2px solid ${themeStyles.border}`,
-          margin: "0.25rem",
+          borderBottom: `1px solid ${themeStyles.border}`,
+          padding: getSpacing(),
+          flexShrink: 0,
+          backgroundColor: themeStyles.backgroundColor,
         }}
       >
+        {/* Top Row - Logo, Title, and Controls */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "0.5rem",
+            gap: "0.5rem",
+            marginBottom: isMobile ? "0.25rem" : "0.5rem",
           }}
         >
-          <div>
+          {/* Logo and Title - Much Smaller */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
+            <img 
+              style={{ 
+                width: getLogoSize(), 
+                height: getLogoSize(),
+                objectFit: "contain"
+              }} 
+              className="app-icon" 
+              src={logo} 
+              alt="Logo" 
+            />
             <h1
               style={{
-                margin: "1rem",
-                fontSize: "4em",
+                margin: 0,
+                fontSize: getHeaderFontSize(),
                 fontWeight: "700",
                 color: "white",
-                display: "flex",
-                alignItems: "center",
+                whiteSpace: "nowrap",
+                lineHeight: 1,
               }}
-            ><img style={{width: "150px", height: "150px"}}className="app-icon" src={logo} alt="Logo" />Afri AI
+            >
+              Afri AI
             </h1>
           </div>
 
-          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          {/* Control Buttons - Compact */}
+          <div 
+            style={{ 
+              display: "flex", 
+              gap: "0.5rem", 
+              alignItems: "center",
+              flexShrink: 0,
+              width: "max-content",
+
+            }}
+          >
             <button
               onClick={() => setShowSessions(!showSessions)}
               style={{
-                padding: "0.5rem 1rem",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                padding: isMobile ? "0.3rem 0.5rem" : "0.4rem 0.6rem",
                 backgroundColor: showSessions ? "#10b981" : themeStyles.border,
                 color: showSessions ? "white" : themeStyles.color,
                 border: "none",
-                borderRadius: "6px",
+                borderRadius: "4px",
                 cursor: "pointer",
-                fontSize: "0.9rem",
-                width: "max-content",
+                fontSize: "0.8em",
+                whiteSpace: "nowrap",
+                fontWeight: "500",
+                minWidth: isMobile ? "60px" : "max-content",
+                textAlign: "center",
                 overflow: "hidden",
 
               }}
             >
-              📁 Sessions ({studySessions.length})
+              📁 {isMobile ? studySessions.length : `Sessions (${studySessions.length})`}
             </button>
 
             <button
               onClick={() => setDarkMode(!darkMode)}
               style={{
-                padding: "0.5rem",
+                padding: isMobile ? "0.3rem" : "0.4rem",
                 backgroundColor: themeStyles.border,
                 color: themeStyles.color,
                 border: "none",
-                borderRadius: "6px",
+                borderRadius: "4px",
                 cursor: "pointer",
-                width: 'fit-content',
+                fontSize: "0.9em",
+                minWidth: isMobile ? "32px" : "36px",
+                height: isMobile ? "32px" : "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               {darkMode ? "☀️" : "🌙"}
@@ -616,62 +1023,64 @@ if (targetIndex !== -1) {
               value={fontSize}
               onChange={(e) => setFontSize(Number(e.target.value))}
               style={{
-                padding: "0.5rem",
+                padding: isMobile ? "0.3rem" : "0.4rem",
                 backgroundColor: themeStyles.inputBg,
                 color: themeStyles.color,
                 border: `1px solid ${themeStyles.border}`,
-                width: "fit-content",
-                borderRadius: "6px",
-                fontSize: "0.9rem",
+                borderRadius: "4px",
+                fontSize: "0.8em",
+                minWidth: isMobile ? "70px" : "80px",
+                fontWeight: "500",
               }}
             >
-              <option value={14}>font: Small</option>
-              <option value={16}>font: Medium</option>
-              <option value={18}>font: Large</option>
-              <option value={20}>font: XL</option>
+              <option value={14}>Small</option>
+              <option value={16}>Medium</option>
+              <option value={18}>Large</option>
+              <option value={20}>XL</option>
             </select>
           </div>
         </div>
 
-        {/* Model Selection Area */}
+        {/* Model Selection - Single Row - WIDER DROPDOWN */}
         {availableModels.length > 0 && (
           <div
             style={{
               display: "flex",
-              margin: "1rem",
-              gap: "1rem",
+              gap: "0.5rem",
               alignItems: "center",
-              flexWrap: "wrap",
+              flexWrap: "nowrap",
+              marginTop: "0.25rem",
             }}
           >
-            <div
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", flexShrink: 0 }}>
               <label
                 style={{
-                  fontSize: "0.9rem",
+                  fontSize: "0.8em",
                   fontWeight: "500",
                   color: "white",
+                  whiteSpace: "nowrap",
                 }}
               >
-                🤖 Select Model:
+                🤖 Model:
               </label>
               <select
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
                 disabled={isLoadingModel}
                 style={{
-                  padding: "0.5rem 1rem",
+                  padding: isMobile ? "0.25rem 0.4rem" : "0.3rem 0.5rem",
                   backgroundColor: themeStyles.inputBg,
                   color: themeStyles.color,
                   border: `1px solid ${themeStyles.border}`,
-                  borderRadius: "6px",
-                  fontSize: "0.9rem",
-                  minWidth: "200px",
+                  borderRadius: "4px",
+                  fontSize: "0.8em",
+                  minWidth: isMobile ? "150px" : "300px",
+                  maxWidth: isMobile ? "200px" : "400px",
+                  fontWeight: "500",
                 }}
               >
                 {availableModels.map((model) => (
-                  <option key={model} value={model}>
+                  <option key={model} value={model} title={model}>
                     {model}
                   </option>
                 ))}
@@ -682,7 +1091,7 @@ if (targetIndex !== -1) {
               onClick={() => loadSelectedModel(selectedModel)}
               disabled={!selectedModel || isLoadingModel || isModelReady}
               style={{
-                padding: "0.5rem 1rem",
+                padding: isMobile ? "0.25rem 0.4rem" : "0.3rem 0.5rem",
                 backgroundColor: isModelReady
                   ? "#10b981"
                   : isLoadingModel
@@ -690,20 +1099,23 @@ if (targetIndex !== -1) {
                   : "#3b82f6",
                 color: "white",
                 border: "none",
-                borderRadius: "6px",
+                borderRadius: "4px",
                 cursor:
                   !selectedModel || isLoadingModel || isModelReady
                     ? "not-allowed"
                     : "pointer",
-                fontSize: "0.9rem",
+                fontSize: "0.8em",
                 fontWeight: "500",
+                whiteSpace: "nowrap",
+                minWidth: isMobile ? "70px" : "80px",
+                textAlign: "center",
               }}
             >
               {isLoadingModel
                 ? "Loading..."
                 : isModelReady
-                ? "✅ Loaded"
-                : "🚀 Load Model"}
+                ? "✅ Ready"
+                : "Load"}
             </button>
 
             {isModelReady && (
@@ -717,33 +1129,34 @@ if (targetIndex !== -1) {
                   setStatus("Select a model to begin");
                 }}
                 style={{
-                  padding: "0.5rem 1rem",
+                  padding: isMobile ? "0.25rem 0.4rem" : "0.3rem 0.5rem",
                   backgroundColor: "#ef4444",
                   color: "white",
                   border: "none",
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   cursor: "pointer",
-                  fontSize: "0.9rem",
+                  fontSize: "0.8em",
+                  whiteSpace: "nowrap",
+                  minWidth: isMobile ? "60px" : "70px",
+                  textAlign: "center",
                 }}
               >
-                🔄 Switch Model
+                Switch
               </button>
             )}
           </div>
         )}
 
-        {/* Progress Bar */}
+        {/* Progress Bar - Ultra Compact */}
         {progressPercent > 0 && progressPercent < 100 && (
-          <div
-            style={{ marginBottom: "1rem", maxWidth: "500px", margin: "1rem" }}
-          >
+          <div style={{ marginTop: "0.25rem", maxWidth: "300px" }}>
             <div
               style={{
                 width: "100%",
                 backgroundColor: themeStyles.border,
-                borderRadius: "10px",
+                borderRadius: "6px",
                 overflow: "hidden",
-                height: "20px",
+                height: "12px",
               }}
             >
               <div
@@ -751,23 +1164,27 @@ if (targetIndex !== -1) {
                   width: `${progressPercent}%`,
                   backgroundColor: "#10b981",
                   height: "100%",
-                  borderRadius: "10px",
+                  borderRadius: "6px",
                   transition: "width 0.3s ease",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "0.8rem",
+                  fontSize: "0.6em",
                   color: "white",
+                  fontWeight: "bold",
                 }}
               >
-                {progressPercent.toFixed(1)}%
+                {progressPercent.toFixed(0)}%
               </div>
             </div>
             <div
               style={{
-                fontSize: "0.9rem",
-                marginTop: "0.5rem",
+                fontSize: "0.7em",
+                marginTop: "0.1rem",
                 color: "white",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
               {status}
@@ -775,42 +1192,48 @@ if (targetIndex !== -1) {
           </div>
         )}
 
-        {/* Status Display */}
+        {/* Status Display - Ultra Compact */}
         {!isModelReady && progressPercent === 0 && (
           <div
             style={{
-              padding: "1rem",
-              margin: "1rem",
+              padding: "0.3rem",
+              marginTop: "0.25rem",
               backgroundColor: "#fef3c7",
               color: "#92400e",
-              borderRadius: "8px",
-              fontSize: "0.9rem",
+              borderRadius: "4px",
+              fontSize: "0.7em",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
             {status}
           </div>
         )}
 
+        {/* Study Mode Selection - Single Row */}
         {isModelReady && (
           <div
             style={{
               display: "flex",
-              margin: "1rem",
-              gap: "2rem",
+              gap: "0.5rem",
               alignItems: "center",
-              flexWrap: "wrap",
+              flexWrap: "nowrap",
+              marginTop: "0.25rem",
             }}
           >
             <select
               value={studyMode}
               onChange={(e) => setStudyMode(e.target.value as StudyMode)}
               style={{
-                padding: "0.5rem 1rem",
+                padding: isMobile ? "0.25rem 0.4rem" : "0.3rem 0.5rem",
                 backgroundColor: themeStyles.inputBg,
                 color: themeStyles.color,
                 border: `1px solid ${themeStyles.border}`,
-                borderRadius: "6px",
-                fontSize: "0.9rem",
+                borderRadius: "4px",
+                fontSize: "0.8em",
+                minWidth: isMobile ? "120px" : "140px",
+                fontWeight: "500",
               }}
             >
               {Object.entries(studyModes).map(([key, label]) => (
@@ -821,36 +1244,39 @@ if (targetIndex !== -1) {
             </select>
 
             <button
-  onClick={() => setShowPromptSuggestions(!showPromptSuggestions)}
-  style={{
-    padding: "0.5rem",
-    backgroundColor: "#fbbf24",
-    color: "#92400e",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontSize: "0.9rem",
-  }}
->
-  💡 Suggestions
-</button>
-
-
+              onClick={() => setShowPromptSuggestions(!showPromptSuggestions)}
+              style={{
+                padding: isMobile ? "0.25rem 0.4rem" : "0.3rem 0.5rem",
+                backgroundColor: showPromptSuggestions ? "#fbbf24" : "#6b7280",
+                color: showPromptSuggestions ? "#92400e" : "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "0.8em",
+                whiteSpace: "nowrap",
+                fontWeight: "500",
+                minWidth: isMobile ? "90px" : "100px",
+                textAlign: "center",
+              }}
+            >
+              💡 {showPromptSuggestions ? "Hide" : "Show"}
+            </button>
           </div>
         )}
       </div>
 
-      {/* Sessions Panel */}
+      {/* Sessions Panel - Ultra Compact */}
       {showSessions && (
         <div
           style={{
             backgroundColor: themeStyles.chatBg,
             border: `1px solid ${themeStyles.border}`,
-            borderRadius: "8px",
-            padding: "0.5rem",
-            margin: "1rem",
-            maxHeight: "200px",
+            borderRadius: "6px",
+            padding: "0.4rem",
+            margin: getSpacing(),
+            maxHeight: isMobile ? "120px" : "150px",
             overflowY: "auto",
+            flexShrink: 0,
           }}
         >
           <div
@@ -858,27 +1284,30 @@ if (targetIndex !== -1) {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              marginBottom: "1rem",
+              marginBottom: "0.5rem",
             }}
           >
-            <h3 style={{ margin: "0", fontSize: "1.2rem" }}>Study Sessions</h3>
+            <h3 style={{ margin: "0", fontSize: "1em", fontWeight: "600" }}>
+              Study Sessions
+            </h3>
             <button
               onClick={startNewSession}
               style={{
-                padding: "0.5rem 1rem",
+                padding: "0.3rem 0.5rem",
                 backgroundColor: "#10b981",
                 color: "white",
                 border: "none",
-                borderRadius: "6px",
+                borderRadius: "4px",
                 cursor: "pointer",
-                fontSize: "0.9rem",
+                fontSize: "0.8em",
+                fontWeight: "500",
               }}
             >
-              + New Session
+              + New
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: "0.5rem" }}>
+          <div style={{ display: "grid", gap: "0.3rem" }}>
             {studySessions.map((session) => (
               <div
                 key={session.id}
@@ -886,7 +1315,7 @@ if (targetIndex !== -1) {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  padding: "0.75rem",
+                  padding: "0.4rem",
                   backgroundColor:
                     currentSessionId === session.id
                       ? "#3b82f6"
@@ -895,20 +1324,26 @@ if (targetIndex !== -1) {
                     currentSessionId === session.id
                       ? "white"
                       : themeStyles.color,
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   cursor: "pointer",
                   border: `1px solid ${themeStyles.border}`,
                 }}
                 onClick={() => loadSession(session.id)}
               >
-                <div>
-                  <div style={{ fontWeight: "500", fontSize: "0.95rem" }}>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div 
+                    style={{ 
+                      fontWeight: "500", 
+                      fontSize: "0.85em",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
                     {session.name}
                   </div>
-                  <div style={{ fontSize: "0.8rem", opacity: 0.7 }}>
-                    {studyModes[session.subject] || session.subject} •{" "}
-                    {session.messages.length} messages •{" "}
-                    {session.timestamp.toLocaleDateString()}
+                  <div style={{ fontSize: "0.75em", opacity: 0.7 }}>
+                    {studyModes[session.subject] || session.subject} • {session.messages.length} msgs
                   </div>
                 </div>
                 <button
@@ -917,13 +1352,19 @@ if (targetIndex !== -1) {
                     deleteSession(session.id);
                   }}
                   style={{
-                    padding: "0.25rem",
+                    padding: "0.2rem",
                     backgroundColor: "transparent",
                     color: "inherit",
                     border: "none",
                     cursor: "pointer",
-                    borderRadius: "4px",
-                    fontSize: "0.8rem",
+                    borderRadius: "3px",
+                    fontSize: "0.8em",
+                    flexShrink: 0,
+                    minWidth: "24px",
+                    minHeight: "24px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
                   🗑️
@@ -934,107 +1375,129 @@ if (targetIndex !== -1) {
         </div>
       )}
 
-      {/* Prompt Suggestions */}
-      {showPromptSuggestions &&
-        isModelReady &&
-        promptSuggestions[studyMode] && (
+      {/* Prompt Suggestions - Ultra Compact */}
+      {showPromptSuggestions && isModelReady && promptSuggestions[studyMode] && (
+        <div
+          style={{
+            backgroundColor: "#fef3c7",
+            border: "1px solid #f59e0b",
+            borderRadius: "6px",
+            padding: "0.4rem",
+            margin: `0 ${getChatMargins()} 0.25rem ${getChatMargins()}`,
+            flexShrink: 0,
+          }}
+        >
           <div
             style={{
-              backgroundColor: "#fef3c7",
-              border: "1px solid #f59e0b",
-              borderRadius: "8px",
-              padding: "0.25rem",
-              marginLeft: "2rem",
-              marginRight: "2rem",
-              marginBottom: "0.5rem",
-              marginTop: "0",
+              fontSize: "0.9em",
+              fontWeight: "500",
+              marginBottom: "0.3rem",
+              color: "#92400e",
             }}
           >
-            <div
-              style={{
-                fontSize: "0.9rem",
-                fontWeight: "500",
-                marginBottom: "0.5rem",
-                color: "#92400e",
-              }}
-            >
-              💡 Try these {studyModes[studyMode]} prompts:
-            </div>
-            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-              {promptSuggestions[studyMode].map((suggestion, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => insertSuggestion(suggestion)}
-                  style={{
-                    padding: "0.5rem 0.75rem",
-                    backgroundColor: "white",
-                    color: "#92400e",
-                    border: "1px solid #f59e0b",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    fontSize: "0.85rem",
-                    transition: "all 0.2s",
-                    display: "flex",
-                    alignItems: "center",
-                    
-                    
-                  }}
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
+            💡 Try these prompts:
           </div>
-        )}
- 
+          <div 
+            style={{ 
+              display: "flex", 
+              gap: isMobile ? "0" : "0.75rem", 
+              flexWrap: "wrap",
+              overflowX: isMobile ? "auto" : "visible",
+              paddingBottom: isMobile ? "0" : "0.3rem",
+            }}
+          >
+            {promptSuggestions[studyMode].map((suggestion, idx) => (
+              <button
+                key={idx}
+                onClick={() => insertSuggestion(suggestion)}
+                style={{
+                  padding: "0.3rem 0.5rem",
+                  backgroundColor: "white",
+                  color: "#92400e",
+                  border: "1px solid #f59e0b",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "0.8em",
+                  transition: "all 0.2s",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                  fontWeight: "500",
+                  minHeight: "28px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Main Chat Area - Maximum Space with Better Height Management */}
       {isModelReady && (
-        <>
-          {/* Enhanced Chat Area */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            minHeight: 0,
+            marginTop: isMobile ? "0.1rem" : "0.25rem",
+            overflow: "hidden",
+          }}
+        >
+          {/* Enhanced Chat Area - Takes maximum space */}
           <div
             style={{
               flex: 1,
               overflowY: "auto",
               border: `1px solid ${themeStyles.border}`,
-              borderRadius: "12px",
-              padding: "1.5rem",
-              margin: "0 2rem",
+              borderRadius: "8px",
+              padding: isMobile ? "0.75rem" : "1rem",
+              marginLeft: getChatMargins(),
+              marginRight: getChatMargins(),
+              marginBottom: "0.25rem",
               backgroundColor: themeStyles.chatBg,
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+              minHeight: 0,
+              WebkitOverflowScrolling: "touch",
             }}
           >
             {messages.map((message, index) => (
               <div key={message.id}>
                 <div
                   style={{
-                    marginBottom: "1.5rem",
-                    padding: "1.25rem",
-                    borderRadius: "12px",
+                    marginBottom: "0.75rem",
+                    padding: isMobile ? "0.6rem" : "0.8rem",
+                    borderRadius: "8px",
                     backgroundColor:
                       message.role === "user"
                         ? themeStyles.userBg
                         : themeStyles.assistantBg,
                     color:
                       message.role === "user" ? "white" : themeStyles.color,
-                    marginLeft: message.role === "user" ? "30%" : "0",
-                    marginRight: message.role === "assistant" ? "30%" : "0",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                    marginLeft: message.role === "user" ? 
+                      (isMobile ? "15%" : isTablet ? "25%" : "30%") : "0",
+                    marginRight: message.role === "assistant" ? 
+                      (isMobile ? "5%" : isTablet ? "15%" : "20%") : "0",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
                     border: `1px solid ${themeStyles.border}`,
                   }}
                 >
                   <div
                     style={{
-                      fontSize: "0.85rem",
+                      fontSize: "0.85em",
                       opacity: 0.9,
-                      marginBottom: "0.75rem",
+                      marginBottom: "0.4rem",
                       fontWeight: "600",
                       display: "flex",
                       alignItems: "center",
-                      gap: "0.5rem",
+                      gap: "0.4rem",
                       flexWrap: "wrap",
                     }}
                   >
-                    {message.role === "user" ? "👨‍🎓 You" : "🤖 AI Tutor"}
-                    <span style={{ fontSize: "0.75rem", opacity: 0.7 }}>
+                    {message.role === "user" ? "👨‍🎓 You" : "🤖 AI"}
+                    <span style={{ fontSize: "0.75em", opacity: 0.7 }}>
                       {message.timestamp.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
@@ -1043,11 +1506,12 @@ if (targetIndex !== -1) {
                     {message.subject && (
                       <span
                         style={{
-                          fontSize: "0.75rem",
+                          fontSize: "0.75em",
                           backgroundColor: "#10b981",
                           color: "white",
-                          padding: "2px 6px",
-                          borderRadius: "4px",
+                          padding: "1px 4px",
+                          borderRadius: "3px",
+                          fontWeight: "500",
                         }}
                       >
                         {studyModes[message.subject as StudyMode]}
@@ -1057,21 +1521,23 @@ if (targetIndex !== -1) {
                     {message.isTruncated && (
                       <span
                         style={{
-                          fontSize: "0.75rem",
+                          fontSize: "0.75em",
                           backgroundColor: "#fbbf24",
                           color: "#92400e",
-                          padding: "2px 6px",
-                          borderRadius: "4px",
+                          padding: "1px 4px",
+                          borderRadius: "3px",
+                          fontWeight: "500",
                         }}
                       >
-                        Truncated ({message.finishReason})
+                        Truncated
                       </span>
                     )}
                   </div>
                   <div
                     style={{
                       whiteSpace: "pre-wrap",
-                      lineHeight: "1.7",
+                      lineHeight: "1.5",
+                      fontSize: "1em",
                     }}
                   >
                     {message.content}
@@ -1085,8 +1551,8 @@ if (targetIndex !== -1) {
                   index === messages.length - 1 && (
                     <div
                       style={{
-                        marginBottom: "1.5rem",
-                        marginRight: "10%",
+                        marginBottom: "0.75rem",
+                        marginRight: isMobile ? "5%" : "10%",
                         display: "flex",
                         justifyContent: "flex-end",
                       }}
@@ -1094,19 +1560,23 @@ if (targetIndex !== -1) {
                       <button
                         onClick={() => continueGeneration(message.id)}
                         style={{
-                          padding: "0.75rem 1.5rem",
+                          padding: "0.4rem 0.8rem",
                           backgroundColor: "#10b981",
                           color: "white",
                           border: "none",
-                          borderRadius: "8px",
+                          borderRadius: "6px",
                           cursor: "pointer",
-                          fontSize: "0.9rem",
-                          fontWeight: "500",
-                          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                          fontSize: "0.9em",
+                          fontWeight: "600",
+                          boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
                           transition: "all 0.2s",
+                          whiteSpace: "nowrap",
+                          minHeight: "32px",
+                          display: "flex",
+                          alignItems: "center",
                         }}
                       >
-                        ➕ Continue Response
+                        ➕ Continue
                       </button>
                     </div>
                   )}
@@ -1116,18 +1586,24 @@ if (targetIndex !== -1) {
             {isGenerating && (
               <div
                 style={{
-                  padding: "1.25rem",
-                  marginRight: "10%",
+                  padding: isMobile ? "0.6rem" : "0.8rem",
+                  marginRight: isMobile ? "5%" : "10%",
                   backgroundColor: "#fef3c7",
-                  border: "2px dashed #f59e0b",
-                  borderRadius: "12px",
+                  border: "1px dashed #f59e0b",
+                  borderRadius: "8px",
                   color: "#92400e",
                   textAlign: "center",
-                  marginBottom: "1.5rem",
+                  marginBottom: "0.75rem",
                 }}
               >
-                <div style={{ fontWeight: "500", marginBottom: "0.5rem" }}>
-                  🧠 Thinking and generating response...
+                <div 
+                  style={{ 
+                    fontWeight: "600", 
+                    marginBottom: "0.4rem",
+                    fontSize: "1em"
+                  }}
+                >
+                  🧠 Thinking...
                 </div>
                 <button
                   onClick={() => {
@@ -1137,13 +1613,19 @@ if (targetIndex !== -1) {
                     }
                   }}
                   style={{
-                    padding: "0.5rem 1rem",
+                    padding: "0.3rem 0.6rem",
                     backgroundColor: "#ef4444",
                     color: "white",
                     border: "none",
-                    borderRadius: "6px",
+                    borderRadius: "4px",
                     cursor: "pointer",
-                    fontSize: "0.9rem",
+                    fontSize: "0.9em",
+                    fontWeight: "500",
+                    minHeight: "28px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    margin: "0 auto",
                   }}
                 >
                   ⏹️ Stop
@@ -1154,44 +1636,50 @@ if (targetIndex !== -1) {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Enhanced Input Area */}
+          {/* Enhanced Input Area - Better Bottom Spacing */}
           <div
             style={{
               display: "flex",
-              gap: "3rem",
+              gap: isMobile ? "0.75rem" : "1rem",
               alignItems: "center",
-              padding: "1rem",
+              padding: isMobile ? "0.25rem" : "0.5rem",
+              paddingTop: "0.25rem",
+              paddingBottom: "0",
               backgroundColor: themeStyles.chatBg,
-              borderRadius: "12px",
+              borderRadius: "8px",
               border: `1px solid ${themeStyles.border}`,
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
-              margin: "1rem 2rem 1rem 2rem",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+              marginLeft: getChatMargins(),
+              marginRight: getChatMargins(),
+              marginBottom: getChatMargins(),
+              flexShrink: 0,
+              minHeight: isMobile ? "max-content" : "max-content",
             }}
           >
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <textarea
                 ref={textareaRef}
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder={`Ask me about ${studyModes[
-                  studyMode
-                ].toLowerCase()}... Try requesting detailed explanations, examples, or step-by-step solutions!`}
+                placeholder={`Ask about ${studyModes[studyMode].toLowerCase()}...`}
                 disabled={isGenerating}
                 style={{
                   width: "100%",
-                  padding: "1rem",
-                  border: `2px solid ${themeStyles.border}`,
-                  borderRadius: "10px",
-                  fontSize: "1rem",
+                  padding: isMobile ? "0.6rem" : "0.75rem",
+                  border: `1px solid ${themeStyles.border}`,
+                  borderRadius: "6px",
+                  fontSize: "1em",
                   resize: "none",
-                  minHeight: "60%",
-                  maxHeight: "80%",
+                  minHeight: "50px",
+                  maxHeight: "100px",
                   fontFamily: "inherit",
                   backgroundColor: themeStyles.inputBg,
                   color: themeStyles.color,
                   outline: "none",
                   transition: "border-color 0.2s ease",
+                  boxSizing: "border-box",
+                  fontWeight: "500",
                 }}
                 rows={1}
               />
@@ -1200,109 +1688,111 @@ if (targetIndex !== -1) {
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
-                gap: "0.75rem",
+                flexDirection: isMobile ? "row" : "column",
+                gap: "0.4rem",
+                alignItems: "center",
               }}
             >
               <button
                 onClick={handleSendMessage}
                 disabled={!inputMessage.trim() || isGenerating}
                 style={{
-                  padding: "0.75rem 1rem",
+                  padding: isMobile ? "0.5rem 0.7rem" : "0.6rem 0.8rem",
                   backgroundColor:
                     inputMessage.trim() && !isGenerating
                       ? "#10b981"
                       : "#9ca3af",
                   color: "white",
                   border: "none",
-                  borderRadius: "10px",
+                  borderRadius: "6px",
                   cursor:
                     inputMessage.trim() && !isGenerating
                       ? "pointer"
                       : "not-allowed",
-                  fontSize: "1rem",
+                  fontSize: "0.9em",
                   fontWeight: "600",
-                  width: "fit-content",
+                  whiteSpace: "nowrap",
                   transition: "all 0.2s ease",
                   display: "flex",
                   alignItems: "center",
-                  gap: "0.5rem",
+                  gap: "0.3rem",
                   justifyContent: "center",
+                  minWidth: isMobile ? "60px" : "70px",
+                  minHeight: isMobile ? "40px" : "45px",
                 }}
               >
                 {isGenerating ? (
                   <>
                     <span>🤔</span>
-                    <span>Thinking...</span>
+                    {!isMobile && <span>Thinking</span>}
                   </>
                 ) : (
                   <>
                     <span>🚀</span>
-                    <span>Send</span>
+                    {!isMobile && <span>Send</span>}
                   </>
                 )}
               </button>
 
               <button
-               onClick={() => {
-  const currentSession = studySessions.find(
-    (s) => s.id === currentSessionId
-  );
+                onClick={() => {
+                  const currentSession = studySessions.find(
+                    (s) => s.id === currentSessionId
+                  );
 
-  if (currentSession && currentSession.messages.length > 0) {
-    const firstMessage = currentSession.messages[0];
-    if (firstMessage) {
-      setMessages([
-        {
-          id: firstMessage.id,
-          role: firstMessage.role,
-          content: firstMessage.content,
-          timestamp: firstMessage.timestamp,
-          subject: firstMessage.subject ?? studyMode,
-          isTruncated: firstMessage.isTruncated ?? false,
-          // omit finishReason if undefined
-        },
-      ]);
-    } else {
-      startNewSession(); // fallback if messages array is empty
-    }
-  } else {
-    setMessages([
-      {
-        id: Date.now().toString(),
-        role: "assistant",
-        content: `Chat cleared! I'm ready to help you with ${studyModes[studyMode].toLowerCase()}. What would you like to work on?`,
-        timestamp: new Date(),
-        subject: studyMode,
-        isTruncated: false,
-      },
-    ]);
-  }
-}}
-
-
-
+                  if (currentSession && currentSession.messages.length > 0) {
+                    const firstMessage = currentSession.messages[0];
+                    if (firstMessage) {
+                      setMessages([
+                        {
+                          id: firstMessage.id,
+                          role: firstMessage.role,
+                          content: firstMessage.content,
+                          timestamp: firstMessage.timestamp,
+                          subject: firstMessage.subject ?? studyMode,
+                          isTruncated: firstMessage.isTruncated ?? false,
+                        },
+                      ]);
+                    } else {
+                      startNewSession();
+                    }
+                  } else {
+                    setMessages([
+                      {
+                        id: Date.now().toString(),
+                        role: "assistant",
+                        content: `Chat cleared! I'm ready to help you with ${studyModes[studyMode].toLowerCase()}. What would you like to work on?`,
+                        timestamp: new Date(),
+                        subject: studyMode,
+                        isTruncated: false,
+                      },
+                    ]);
+                  }
+                }}
                 style={{
-                  padding: "0.75rem 1rem",
+                  padding: isMobile ? "0.5rem 0.7rem" : "0.6rem 0.8rem",
                   backgroundColor: "#ef4444",
                   color: "white",
                   border: "none",
-                  borderRadius: "8px",
+                  borderRadius: "6px",
                   cursor: "pointer",
-                  fontSize: "0.9rem",
-                  fontWeight: "500",
+                  fontSize: "0.9em",
+                  fontWeight: "600",
                   display: "flex",
                   alignItems: "center",
-                  gap: "0.5rem",
+                  gap: "0.3rem",
                   justifyContent: "center",
+                  whiteSpace: "nowrap",
+                  minWidth: isMobile ? "60px" : "70px",
+                  minHeight: isMobile ? "40px" : "45px",
                 }}
               >
                 <span>🧹</span>
-                <span>Clear</span>
+                {!isMobile && <span>Clear</span>}
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
