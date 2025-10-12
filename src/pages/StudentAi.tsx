@@ -1,6 +1,281 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import logo from "../assets/images/afri-ai.png";
 
+
+const LoadingScreen: React.FC = () => {
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  useEffect(() => {
+  // Show welcome for 8 seconds, then start fade out
+  const welcomeTimer = setTimeout(() => {
+    setFadeOut(true);
+  }, 8000); // Increased from 3000ms to 8000ms
+
+  // Completely hide after fade out completes
+  const hideTimer = setTimeout(() => {
+    setShowWelcome(false);
+  }, 5000); 
+
+  return () => {
+    clearTimeout(welcomeTimer);
+    clearTimeout(hideTimer);
+  };
+}, []);
+
+  if (!showWelcome) {
+    return null;
+  }
+
+return (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "#0a2613",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999,
+      fontFamily: "system-ui, -apple-system, sans-serif",
+      overflow: "hidden",
+    }}
+  >
+    {/* Subtle background gradient */}
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        background: `radial-gradient(circle at 30% 70%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 30%, rgba(16, 185, 129, 0.05) 0%, transparent 50%)`,
+      }}
+    />
+    
+    {/* Minimal floating particles */}
+    {[...Array(8)].map((_, i) => (
+      <div
+        key={i}
+        style={{
+          position: "absolute",
+          width: `${Math.random() * 3 + 2}px`,
+          height: `${Math.random() * 3 + 2}px`,
+          backgroundColor: `rgba(16, 185, 129, ${Math.random() * 0.15 + 0.1})`,
+          borderRadius: "50%",
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+          animation: `floatParticle ${Math.random() * 20 + 20}s linear infinite`,
+          animationDelay: `${Math.random() * 10}s`,
+        }}
+      />
+    ))}
+
+    {/* Main content container */}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        transform: fadeOut ? "translateY(-8px)" : "translateY(0)",
+        opacity: fadeOut ? 0 : 1,
+        transition: "all 1.2s ease-out",
+      }}
+    >
+      {/* Logo with smooth, professional animation */}
+      <div
+        style={{
+          position: "relative",
+          marginBottom: "3rem",
+        }}
+      >
+        <img 
+          src={logo} 
+          alt="Afri AI Logo" 
+          style={{
+            width: "200px",
+            height: "200px",
+            transform: fadeOut ? "scale(0.95)" : "scale(1)",
+            opacity: fadeOut ? 0 : 1,
+            transition: "all 1.2s ease-out",
+            filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.4))",
+            animation: "logoEntrance 1.8s ease-out, logoFloat 8s ease-in-out infinite 1.8s",
+          }}
+        />
+        
+        {/* Subtle glow effect */}
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "240px",
+            height: "240px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)",
+            animation: "pulseGlow 6s ease-in-out infinite",
+            zIndex: -1,
+          }}
+        />
+      </div>
+
+      {/* Main title with clean reveal */}
+      <h1
+        style={{
+          color: "white",
+          fontSize: "4.5rem",
+          fontWeight: "700",
+          marginBottom: "1.5rem",
+          marginTop: 0,
+          textAlign: "center",
+          background: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          transform: fadeOut ? "translateY(-6px)" : "translateY(0)",
+          opacity: fadeOut ? 0 : 1,
+          transition: "all 1.2s ease-out 0.1s",
+          textShadow: "0 8px 32px rgba(16, 185, 129, 0.3)",
+          letterSpacing: "2px",
+          animation: "titleReveal 1.5s ease-out 0.8s both",
+          lineHeight: "1.1",
+        }}
+      >
+        Afri AI
+      </h1>
+      
+      {/* Subtitle with elegant fade-in */}
+      <p
+        style={{
+          color: "rgba(255,255,255,0.85)",
+          fontSize: "1.5rem",
+          marginBottom: "0",
+          marginTop: 0,
+          textAlign: "center",
+          transform: fadeOut ? "translateY(-4px)" : "translateY(0)",
+          opacity: fadeOut ? 0 : 1,
+          transition: "all 1.2s ease-out 0.2s",
+          textShadow: "0 2px 8px rgba(0,0,0,0.3)",
+          fontWeight: "300",
+          letterSpacing: "1px",
+          animation: "subtitleReveal 1.8s ease-out 1.5s both",
+          maxWidth: "400px",
+          lineHeight: "1.4",
+        }}
+      >
+        Your Intelligent Study Companion
+      </p>
+
+      {/* Minimal decorative line */}
+      <div
+        style={{
+          width: "80px",
+          height: "1px",
+          background: "linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent)",
+          marginTop: "2.5rem",
+          opacity: fadeOut ? 0 : 0.5,
+          transition: "opacity 0.8s ease-out 0.4s",
+          animation: "lineReveal 1.2s ease-out 2.2s both",
+        }}
+      />
+    </div>
+
+    <style>
+      {`
+        @keyframes logoEntrance {
+          0% {
+            transform: scale(0.9);
+            opacity: 0;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+        
+        @keyframes logoFloat {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
+        }
+        
+        @keyframes pulseGlow {
+          0%, 100% {
+            opacity: 0.1;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          50% {
+            opacity: 0.2;
+            transform: translate(-50%, -50%) scale(1.05);
+          }
+        }
+        
+        @keyframes titleReveal {
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes subtitleReveal {
+          0% {
+            opacity: 0;
+            transform: translateY(15px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes floatParticle {
+          0% {
+            transform: translateY(100vh);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.3;
+          }
+          90% {
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateY(-100px);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes lineReveal {
+          0% {
+            width: 0px;
+            opacity: 0;
+          }
+          100% {
+            width: 80px;
+            opacity: 0.5;
+          }
+        }
+      `}
+    </style>
+  </div>
+);
+
+};
+
 // Simple responsive hook
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState<boolean>(false);
@@ -45,6 +320,7 @@ type MLCEngineInterface = any; // fallback type
 type InitProgressReport = any; // fallback type
 
 const StudentAI: React.FC = () => {
+   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [status, setStatus] = useState<string>("Loading available models...");
   const [progressPercent, setProgressPercent] = useState<number>(0);
   const [engine, setEngine] = useState<MLCEngineInterface | null>(null);
@@ -154,6 +430,14 @@ const StudentAI: React.FC = () => {
     }
   }, [autoScroll]);
 
+ useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, scrollToBottom]);
@@ -220,8 +504,9 @@ const StudentAI: React.FC = () => {
 
         // Prioritize smaller, faster models for better student experience
         const preferredPatterns = [
+                    /qwen.*0\.5b/i,
+
           /tiny.*llama.*1b/i,
-          /qwen.*0\.5b/i,
           /qwen.*1\.8b/i,
           /llama.*3\.2.*1b/i,
           /phi.*3.*mini/i,
@@ -617,6 +902,9 @@ What would you like to study today?`,
     return "80px";
   };
 
+   if (isLoading) {
+    return <LoadingScreen />;
+  }
      return (
     <div
       ref={containerRef}
