@@ -1,5 +1,233 @@
 .dashboard {
   padding: 2rem;
+  background-color: #F5F7F6;
+  color: #1F2D28;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard h1{
+  font-family: League Spartan;
+}
+
+.actions {
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.actions button {
+  background-color: #b88917; /* new amber */
+  margin-top: 50px;
+  margin-bottom: 30px;
+  border: 1px solid #e8d4a2; /* soft warm border */
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.15s ease;
+  font-weight: bold;
+}
+
+.actions button:hover {
+  background-color: #a47814;
+  transform: translateY(-2px);
+}
+
+.selectioncontainer{
+  display: flex;
+  gap: 100px;
+}
+
+.uploadForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #4a6d435f;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  margin-bottom: 2rem;
+  min-height: 640px;
+  width: 500px;
+  border: 1px solid #4A6D43; /* amber tint border */
+}
+
+.uploadForm select,
+.uploadForm input,
+.uploadForm textarea{
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #e8d4a2;
+  background-color: #f9f8f5;
+  color: #1F2D28;
+}
+
+.uploadForm select:focus,
+.uploadForm input:focus,
+.uploadForm textarea:focus{
+  outline: none;
+  border: 1px solid #b88917;
+  box-shadow: 0 0 0 2px rgba(184,137,23,0.25);
+  background-color: #ffffff;
+}
+
+.uploadForm button {
+  background-color: #4A6D43; /* new amber */
+  font-weight: bold;
+  border: 1px solid #4A6D43;
+  padding: 0.7rem;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.15s ease;
+}
+
+.uploadForm button:hover {
+  background-color: #a47814;
+  transform: translateY(-2px);
+}
+
+/* Terms Section Styles */
+.termsSection {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #fff9ec;
+  border-radius: 6px;
+  border: 1px solid #e8d4a2;
+}
+
+.termsSection h3 {
+  margin: 0 0 1rem 0;
+  color: #b88917;
+  font-family: League Spartan;
+  font-size: 1.1rem;
+}
+
+.termRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #e8d4a2;
+}
+
+.termRow input {
+  width: 90%;
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #e8d4a2;
+  background-color: #f9f8f5;
+  color: #1F2D28;
+}
+
+.termRow textarea {
+  width: 90%;
+  min-height: 80px;
+  resize: vertical;
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #e8d4a2;
+  background-color: #f9f8f5;
+  color: #1F2D28;
+  font-family: inherit;
+}
+
+.termRow input:focus,
+.termRow textarea:focus {
+  outline: none;
+  border-color: #b88917;
+  box-shadow: 0 0 0 2px rgba(184,137,23,0.25);
+  background-color: #ffffff;
+}
+
+.removeBtn {
+  background-color: #8B0000;
+  color: white;
+  border: 1px solid #e8d4a2;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.removeBtn:hover:not(:disabled) {
+  background-color: #DC143C;
+  transform: translateY(-2px);
+}
+
+.removeBtn:disabled {
+  background-color: #B9C4BE;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.addBtn {
+  background-color: #b88917; /* new amber */
+  color: #fff;
+  border: 1px solid #e8d4a2;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.15s ease;
+  margin-bottom: 1rem;
+  width: fit-content;
+}
+
+.addBtn:hover {
+  background-color: #a47814;
+  transform: translateY(-2px);
+}
+
+/* Input placeholders */
+.uploadForm input::placeholder,
+.uploadForm textarea::placeholder {
+  color: #9f8f68;
+}
+
+.termRow input::placeholder,
+.termRow textarea::placeholder {
+  color: #9f8f68;
+}
+
+/* Form spacing adjustments for glossary form */
+.uploadForm:has(.termsSection) {
+  min-height: auto;
+  height: auto;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.5rem;
+  color: #b88917;
+}
+
+@media (max-width: 600px) {
+  .selectioncontainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .uploadForm {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+
+/* .dashboard {
+  padding: 2rem;
   background-color: #133A1F;
   color: white;
   height: 100vh;
@@ -8,8 +236,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-
 }
 
 .dashboard h1{
@@ -81,7 +307,7 @@
   background-color: #286b3d;
 }
 
-/* Terms Section Styles */
+/* Terms Section Styles 
 .termsSection {
   margin: 1rem 0;
   padding: 1rem;
@@ -175,7 +401,7 @@
   background-color: #286b3d;
 }
 
-/* Input placeholders */
+/* Input placeholders 
 .uploadForm input::placeholder,
 .uploadForm textarea::placeholder {
   color: #9ca3af;
@@ -186,7 +412,7 @@
   color: #9ca3af;
 }
 
-/* Form spacing adjustments for glossary form */
+/* Form spacing adjustments for glossary form 
 .uploadForm:has(.termsSection) {
   min-height: auto;
   height: auto;
@@ -208,4 +434,4 @@
     width: 100%;
     max-width: 100%;
   }
-}
+} */

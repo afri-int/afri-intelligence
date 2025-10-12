@@ -16,9 +16,10 @@
 /* Main container card */
 .container {
   box-sizing: border-box;
-  width: 600px;
+  width: 1000px;
   height: 400px;
-  background-color: #236738; /* brand green */
+  background-image: url(C:\Users\ntsan\Documents\GitHub\AfriIntelligence\src\assets\images\4e9558c75ba1bfda1c46ce35a8d5c14ea4cadd03.png);
+  background-color: #205631; /* brand green */
   opacity: 0.9;
   display: flex;
   flex-direction: column;
@@ -28,7 +29,7 @@
   padding: 24px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: max(24px, calc((100svh - 400px) / 2));
+  margin-top: 190px;
   margin-bottom: max(24px, calc((100svh - 400px) / 2));
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.25);

@@ -77,7 +77,7 @@
   width: 100%;
   display: flex;
   align-items: center;
-  border: 1px solid #236738;
+  border: 1px solid #b88917;
   border-radius: 30px;
   background: white;
   cursor: pointer;
@@ -90,7 +90,7 @@
 }
 
 .custom-file-input label {
-  background: #236738;
+  background: #b88917;
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -113,7 +113,7 @@
 select {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #005019;
+  border: 1px solid #b88917;
   border-radius: 30px;
   margin-bottom: 0rem;
   background: #236738;
@@ -128,7 +128,7 @@ select {
   align-items: center;
   width: 9rem;
   height: 38px;
-  background: #236738;
+  background: #b88917;
   color: white;
   font-weight: 700;
   font-size: 1rem;
@@ -162,10 +162,10 @@ select {
   right: 0;
   width: 30px;
   height: 30px;
-  background: linear-gradient(-135deg, white 50%, #236738 50%);
+  background: linear-gradient(-135deg, white 50%, #b88917 50%);
   clip-path: polygon(0% 0%, 0% 100%, 100% 100%);
-  border-bottom: 2px solid #236738;
-  border-right: 2px solid #236738;
+  border-bottom: 2px solid #b88917;
+  border-right: 2px solid #b88917;
 }
 
 .file-icon::after {

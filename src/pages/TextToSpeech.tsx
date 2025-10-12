@@ -152,7 +152,7 @@ const TextToSpeech: React.FC = () => {
       <div className="header">
         <img className="app-icon" src="/assets/images/logo.jpg" alt="Logo" />
         <div data-i18n className="title">
-          <span>Exam Paper Translator</span>
+          <span>Text - To - Speech</span>
         </div>
         <div className="underline"></div>
       </div>
