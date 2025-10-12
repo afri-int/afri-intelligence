@@ -34,6 +34,7 @@ const TeacherDashboard: React.FC = () => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [years, setYears] = useState<number[]>([]);
+  const [activeTab, setActiveTab] = useState<"document" | "glossary">("document");
 
   const [docForm, setDocForm] = useState({
     grade: "",
@@ -62,9 +63,6 @@ const TeacherDashboard: React.FC = () => {
         setGrades(res.data.grades || []);
         setSubjects(res.data.subjects || []);
         setYears(res.data.years || [2025, 2024, 2023]);
-        
-        console.log("Subjects received:", res.data.subjects);
-        console.log("Grades received:", res.data.grades);
       })
       .catch(() => alert("Failed to load filter options"));
 
@@ -153,7 +151,6 @@ const TeacherDashboard: React.FC = () => {
   const handleGlossarySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate that all terms have both term and definition
     const validTerms = glossaryTerms.filter(t => t.term.trim() && t.definition.trim());
     
     if (validTerms.length === 0) {
@@ -169,7 +166,7 @@ const TeacherDashboard: React.FC = () => {
           grade: glossaryForm.grade,
           title: glossaryForm.title,
           id: glossaryForm.id,
-          terms: validTerms, // This automatically converts to the JSON format your backend expects
+          terms: validTerms,
         },
         {
           headers: {
@@ -199,10 +196,8 @@ const TeacherDashboard: React.FC = () => {
     }
   };
 
-  // Fixed helper function to handle all types properly
   const renderOptions = (items: any[]) =>
     items.map((item, index) => {
-      // Handle numbers (like years)
       if (typeof item === "number") {
         return (
           <option key={index} value={item}>
@@ -210,7 +205,6 @@ const TeacherDashboard: React.FC = () => {
           </option>
         );
       }
-      // Handle strings
       if (typeof item === "string") {
         return (
           <option key={index} value={item}>
@@ -218,7 +212,6 @@ const TeacherDashboard: React.FC = () => {
           </option>
         );
       }
-      // Handle objects
       if (typeof item === "object" && item !== null) {
         return (
           <option
@@ -234,167 +227,264 @@ const TeacherDashboard: React.FC = () => {
 
   return (
     <div className={styles.dashboard}>
-      <h1>Welcome Educator {user.name}</h1>
+      <div className={styles.header}>
+        <h1>Welcome, {user.name}!</h1>
+        <p className={styles.subtitle}>Teacher Dashboard</p>
+      </div>
 
-      
-
-      <div className={styles.selectioncontainer}>
-        {/* Upload Document */}
-        <form
-          id="docForm"
-          className={styles.uploadForm}
-          onSubmit={handleDocSubmit}
+      <div className={styles.tabContainer}>
+        <button 
+          className={`${styles.tab} ${activeTab === "document" ? styles.activeTab : ""}`}
+          onClick={() => setActiveTab("document")}
         >
-          <h2>Upload Document (Past Paper)</h2>
-
-          <select
-            name="grade"
-            value={docForm.grade}
-            onChange={handleDocChange}
-            required
-          >
-            <option value="">Select Grade</option>
-            {renderOptions(grades)}
-          </select>
-
-          <select
-            name="subject"
-            value={docForm.subject}
-            onChange={handleDocChange}
-            required
-          >
-            <option value="">Select Subject</option>
-            {renderOptions(subjects)}
-          </select>
-
-          <select
-            name="year"
-            value={docForm.year}
-            onChange={handleDocChange}
-            required
-          >
-            <option value="">Select Year</option>
-            {renderOptions(years)}
-          </select>
-
-          <select
-            name="paperType"
-            value={docForm.paperType}
-            onChange={handleDocChange}
-            required
-          >
-            <option value="p1">P1</option>
-            <option value="p2">P2</option>
-          </select>
-
-          <select
-            name="language"
-            value={docForm.language}
-            onChange={handleDocChange}
-            required
-          >
-            <option value="">Select Language</option>
-            {renderOptions(languages)}
-          </select>
-
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={handleFileChange}
-            required
-          />
-          <button type="submit" disabled={docLoading}>
-            {docLoading ? "Uploading..." : "Submit"}
-          </button>
-        </form>
-
-        {/* Upload Glossary */}
-        <form
-          id="glossaryForm"
-          className={styles.uploadForm}
-          onSubmit={handleGlossarySubmit}
+          <span className={styles.tabContent}>
+            <span className={styles.tabIcon}>📄</span>
+            <span className={styles.tabText}>Upload Document</span>
+          </span>
+        </button>
+        <button 
+          className={`${styles.tab} ${activeTab === "glossary" ? styles.activeTab : ""}`}
+          onClick={() => setActiveTab("glossary")}
         >
-          <h2>Upload Glossary Item</h2>
+          <span className={styles.tabContent}>
+            <span className={styles.tabIcon}>📚</span>
+            <span className={styles.tabText}>Upload Glossary</span>
+          </span>
+        </button>
+      </div>
 
-          <select
-            name="subject"
-            value={glossaryForm.subject}
-            onChange={handleGlossaryChange}
-            required
-          >
-            <option value="">Select Subject</option>
-            {renderOptions(subjects)}
-          </select>
+      <div className={styles.contentContainer}>
+        {activeTab === "document" && (
+          <form className={styles.uploadForm} onSubmit={handleDocSubmit}>
+            <div className={styles.formHeader}>
+              <h2>Upload Past Paper</h2>
+              <p>Fill in the details below to upload a new past paper</p>
+            </div>
 
-          <select
-            name="grade"
-            value={glossaryForm.grade}
-            onChange={handleGlossaryChange}
-            required
-          >
-            <option value="">Select Grade</option>
-            {renderOptions(grades)}
-          </select>
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label>Grade</label>
+                <select
+                  name="grade"
+                  value={docForm.grade}
+                  onChange={handleDocChange}
+                  required
+                >
+                  <option value="">Select Grade</option>
+                  {renderOptions(grades)}
+                </select>
+              </div>
 
-          <input
-            type="text"
-            name="title"
-            placeholder="Topic Title"
-            value={glossaryForm.title}
-            onChange={handleGlossaryChange}
-            required
-          />
+              <div className={styles.formGroup}>
+                <label>Subject</label>
+                <select
+                  name="subject"
+                  value={docForm.subject}
+                  onChange={handleDocChange}
+                  required
+                >
+                  <option value="">Select Subject</option>
+                  {renderOptions(subjects)}
+                </select>
+              </div>
 
-          <input
-            type="text"
-            name="id"
-            placeholder="Topic ID (no spaces or special chars)"
-            value={glossaryForm.id}
-            onChange={handleGlossaryChange}
-            required
-          />
+              <div className={styles.formGroup}>
+                <label>Year</label>
+                <select
+                  name="year"
+                  value={docForm.year}
+                  onChange={handleDocChange}
+                  required
+                >
+                  <option value="">Select Year</option>
+                  {renderOptions(years)}
+                </select>
+              </div>
 
-          {/* Dynamic Terms Section */}
-          <div className={styles.termsSection}>
-            <h3>Terms & Definitions</h3>
-            {glossaryTerms.map((termObj, index) => (
-              <div key={index} className={styles.termRow}>
+              <div className={styles.formGroup}>
+                <label>Paper Type</label>
+                <select
+                  name="paperType"
+                  value={docForm.paperType}
+                  onChange={handleDocChange}
+                  required
+                >
+                  <option value="p1">Paper 1</option>
+                  <option value="p2">Paper 2</option>
+                </select>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label>Language</label>
+                <select
+                  name="language"
+                  value={docForm.language}
+                  onChange={handleDocChange}
+                  required
+                >
+                  <option value="">Select Language</option>
+                  {renderOptions(languages)}
+                </select>
+              </div>
+
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label>PDF File</label>
+                <div className={styles.fileInputContainer}>
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handleFileChange}
+                    className={styles.fileInput}
+                    required
+                  />
+                  <span className={styles.fileInputLabel}>
+                    {docForm.file ? docForm.file.name : "Choose PDF file..."}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <button 
+              type="submit" 
+              disabled={docLoading}
+              className={styles.submitButton}
+            >
+              {docLoading ? (
+                <>
+                  <span className={styles.spinner}></span>
+                  Uploading...
+                </>
+              ) : (
+                "Upload Document"
+              )}
+            </button>
+          </form>
+        )}
+
+        {activeTab === "glossary" && (
+          <form className={`${styles.uploadForm} ${styles.glossaryForm}`} onSubmit={handleGlossarySubmit}>
+            <div className={styles.formHeader}>
+              <h2>Upload Glossary</h2>
+              <p>Create a new glossary topic with terms and definitions</p>
+            </div>
+
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label>Subject</label>
+                <select
+                  name="subject"
+                  value={glossaryForm.subject}
+                  onChange={handleGlossaryChange}
+                  required
+                >
+                  <option value="">Select Subject</option>
+                  {renderOptions(subjects)}
+                </select>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label>Grade</label>
+                <select
+                  name="grade"
+                  value={glossaryForm.grade}
+                  onChange={handleGlossaryChange}
+                  required
+                >
+                  <option value="">Select Grade</option>
+                  {renderOptions(grades)}
+                </select>
+              </div>
+
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label>Topic Title</label>
                 <input
                   type="text"
-                  placeholder="Term"
-                  value={termObj.term}
-                  onChange={(e) => handleTermChange(index, 'term', e.target.value)}
+                  name="title"
+                  placeholder="Enter topic title"
+                  value={glossaryForm.title}
+                  onChange={handleGlossaryChange}
                   required
                 />
-                <textarea
-                  placeholder="Definition"
-                  value={termObj.definition}
-                  onChange={(e) => handleTermChange(index, 'definition', e.target.value)}
+              </div>
+
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label>Topic ID</label>
+                <input
+                  type="text"
+                  name="id"
+                  placeholder="topic-id-no-spaces"
+                  value={glossaryForm.id}
+                  onChange={handleGlossaryChange}
                   required
                 />
+                <small className={styles.helperText}>
+                  Use lowercase letters, numbers, and hyphens only
+                </small>
+              </div>
+            </div>
+
+            <div className={styles.termsSection}>
+              <div className={styles.sectionHeader}>
+                <h3>Terms & Definitions</h3>
                 <button
                   type="button"
-                  onClick={() => removeTerm(index)}
-                  disabled={glossaryTerms.length === 1}
-                  className={styles.removeBtn}
+                  onClick={addTerm}
+                  className={styles.addBtn}
                 >
-                  Remove
+                  + Add Term
                 </button>
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={addTerm}
-              className={styles.addBtn}
-            >
-              Add Another Term
-            </button>
-          </div>
+              
+              <div className={styles.termsList}>
+                {glossaryTerms.map((termObj, index) => (
+                  <div key={index} className={styles.termCard}>
+                    <div className={styles.termHeader}>
+                      <span className={styles.termNumber}>Term #{index + 1}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeTerm(index)}
+                        disabled={glossaryTerms.length === 1}
+                        className={styles.removeBtn}
+                      >
+                        ×
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Enter term"
+                      value={termObj.term}
+                      onChange={(e) => handleTermChange(index, 'term', e.target.value)}
+                      className={styles.termInput}
+                      required
+                    />
+                    <textarea
+                      placeholder="Enter definition"
+                      value={termObj.definition}
+                      onChange={(e) => handleTermChange(index, 'definition', e.target.value)}
+                      className={styles.definitionInput}
+                      required
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          <button type="submit" disabled={glossaryLoading}>
-            {glossaryLoading ? "Uploading..." : "Submit"}
-          </button>
-        </form>
+            <button 
+              type="submit" 
+              disabled={glossaryLoading}
+              className={styles.submitButton}
+            >
+              {glossaryLoading ? (
+                <>
+                  <span className={styles.spinner}></span>
+                  Uploading...
+                </>
+              ) : (
+                "Upload Glossary"
+              )}
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
