@@ -1,3 +1,8 @@
+##LICENCE:
+This project is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license
+
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
