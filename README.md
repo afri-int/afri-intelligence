@@ -1,6 +1,6 @@
 ##LICENCE:
 This project is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license
-
+https://github.com/ShezadSatter/AfriIntelligence/blob/main/LICENCE
 
 
 # React + TypeScript + Vite
