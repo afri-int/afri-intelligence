@@ -46,8 +46,8 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
   "http://localhost:3001",
-  "https://afri-intelligence.vercel.app",
-  "https://afri-intelligence.onrender.com",
+  "https://afri-intelligence-delta.vercel.app",
+  "https://afri-intelligence-delta.onrender.com",
 ];
 
 app.use(cors({
