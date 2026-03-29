@@ -10,17 +10,28 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   const { name, email, password, role } = req.body;
 
-  if (!name || !email || !password || !role) {
+  const emailNormalized = email?.toLowerCase().trim();
+  const passwordNormalized = password?.trim();
+
+  if (!name || !emailNormalized || !passwordNormalized || !role) {
     return res.status(400).json({ error: "All fields are required." });
   }
 
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ error: "User already exists." });
+    const existingUser = await User.findOne({ email: emailNormalized });
+    if (existingUser) {
+      return res.status(400).json({ error: "User already exists." });
+    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(passwordNormalized, 10);
 
-    const newUser = new User({ name, email, password: hashedPassword, role });
+    const newUser = new User({
+      name,
+      email: emailNormalized,
+      password: hashedPassword,
+      role
+    });
+
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully!" });
@@ -33,22 +44,46 @@ router.post("/register", async (req, res) => {
 // Login route
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: "All fields required" });
+
+  const emailNormalized = email?.toLowerCase().trim();
+  const passwordNormalized = password?.trim();
+
+  if (!emailNormalized || !passwordNormalized) {
+    return res.status(400).json({ error: "All fields required" });
+  }
 
   try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: "Invalid credentials" });
+    const user = await User.findOne({ email: emailNormalized });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+    if (!user) {
+      console.log("User not found for:", emailNormalized);
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "secret", {
-      expiresIn: "1d",
+    const isMatch = await bcrypt.compare(passwordNormalized, user.password);
+
+    console.log("Password match:", isMatch);
+
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET || "secret",
+      { expiresIn: "1d" }
+    );
+
+    res.json({
+      user: {
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+      token,
     });
-
-    res.json({ user: { name: user.name, email: user.email, role: user.role }, token });
   } catch (err) {
-    console.error(err);
+    console.error("LOGIN ERROR:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
